@@ -162,6 +162,7 @@ class Collection:
         """
         Checks whether the data type matches the schema.
         """
+        print(" self._schema", self._schema)
         if self._schema is None:
             return False
         if self._schema.auto_id:
@@ -172,7 +173,9 @@ class Collection:
                     data = data.drop(self._schema.primary_field.name, axis=1)
 
         infer_fields = parse_fields_from_data(data)
+        print("infer_fields", infer_fields)
         tmp_fields = copy.deepcopy(self._schema.fields)
+        print("tmp_fields", tmp_fields)
 
         for i, field in enumerate(self._schema.fields):
             if field.is_primary and field.auto_id:
@@ -183,9 +186,11 @@ class Collection:
 
         for x, y in zip(infer_fields, tmp_fields):
             if x.dtype != y.dtype:
+                print("x.dtype", x.dtype, "y.dtype", y.dtype)
                 return False
             if isinstance(data, pandas.DataFrame):
                 if x.name != y.name:
+                    print("x.name", x.name, "y.name", y.name)
                     return False
             # todo check dim
         return True
